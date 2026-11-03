@@ -102,7 +102,7 @@ local labels = {
     times = function(n) return is_chinese and n.."次" or n.." times" end,
     mod_info = is_chinese and "========== 模组信息 ==========" or "========== Mod Info ==========",
     version_info = is_chinese and "版本: "..MOD_VERSION.." | 灾难: 100" or "Version: "..MOD_VERSION.." | Disasters: 100",
-    event_breakdown = is_chinese and "致命: 10 | 正面: 80 | 中立: 10" or "Fatal: 10 | Positive: 80 | Neutral: 10",
+    event_breakdown = is_chinese and "致命: 30 | 正面: 80 | 中立: 10" or "Fatal: 30 | Positive: 80 | Neutral: 10",
     greeting = is_chinese and "愿灾难眷顾你。" or "May disasters favor you.",
     author_info = is_chinese and "作者：Salt510" or "Author: Salt510",
     contact = is_chinese and "Q群:1042944194 欢迎交流。" or "QQ Group: 1042944194 Welcome!",
