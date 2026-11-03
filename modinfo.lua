@@ -56,6 +56,8 @@ end
 
 local labels = {
     basic_settings = is_chinese and "========== 基础设置 ==========" or "========== Basic Settings ==========",
+    disaster_interval = is_chinese and "灾难播报间隔" or "Disaster Interval",
+    first_disaster_delay = is_chinese and "开局首次灾难延迟" or "First Disaster Delay",
     event_count = is_chinese and "每次降临灾难数量" or "Disaster Count",
     event_count_hover = is_chinese and "每分钟触发的灾难事件数量" or "Number of disaster events to trigger every minute",
     events = function(n) return is_chinese and n.."个灾难" or n.." disasters" end,
@@ -74,6 +76,11 @@ local labels = {
     half_day = is_chinese and "每半分钟 (30秒)" or "Every 30 Seconds",
     daily = is_chinese and "每两分钟 (120秒)" or "Every 2 Minutes (120s)",
     days = function(n) return is_chinese and "每"..n.."秒降临" or "Every "..n.." seconds" end,
+    clean_settings = is_chinese and "========== 清理设置 ==========" or "========== Cleaning Settings ==========",
+    clean_interval = is_chinese and "地面垃圾清理间隔" or "Clean Interval",
+    clean_interval_hover = is_chinese and "每隔多少秒清理一次地面物品（需前置模组）" or "How often to clean ground items",
+    clean_notice_advance = is_chinese and "清理预警提前时间" or "Clean Warning Advance",
+    clean_notice_advance_hover = is_chinese and "清理前多少秒进行全服预警" or "How many seconds to warn before cleaning",
     event_types = is_chinese and "========== 灾难类型 ==========" or "========== Disaster Types ==========",
     enable_negative = is_chinese and "启用致命灾难" or "Enable Fatal Disasters",
     enable_negative_hover = is_chinese and "是否生成致命灾难事件" or "Whether to generate fatal disaster events",
@@ -101,8 +108,8 @@ local labels = {
     repeat_limit_hover = is_chinese and "【实验性】同一条灾难最多出现几次后不再出现（可能无效）" or "[Experimental] Maximum times a disaster can appear (may not work)",
     times = function(n) return is_chinese and n.."次" or n.." times" end,
     mod_info = is_chinese and "========== 模组信息 ==========" or "========== Mod Info ==========",
-    version_info = is_chinese and "版本: "..MOD_VERSION.." | 灾难: 100" or "Version: "..MOD_VERSION.." | Disasters: 100",
-    event_breakdown = is_chinese and "致命: 30 | 正面: 80 | 中立: 10" or "Fatal: 30 | Positive: 80 | Neutral: 10",
+    version_info = is_chinese and "版本: "..MOD_VERSION.." | 灾难3000" or "Version: "..MOD_VERSION.." | Disasters: 100",
+    event_breakdown = is_chinese and "致命: 167 | 正面: 80 | 中立: 10" or "Fatal: 167 | Positive: 80 | Neutral: 10",
     greeting = is_chinese and "愿灾难眷顾你。" or "May disasters favor you.",
     author_info = is_chinese and "作者：Salt510" or "Author: Salt510",
     contact = is_chinese and "Q群:1042944194 欢迎交流。" or "QQ Group: 1042944194 Welcome!",
@@ -111,6 +118,30 @@ local labels = {
 
 configuration_options = {
     Title(labels.basic_settings),
+    {
+        name = "disaster_interval",
+        label = labels.disaster_interval,
+        hover = "每隔多少秒强制播报一次灾难",
+        options = {
+            {description = "30秒 (极度疯狂)", data = 30},
+            {description = "60秒 (标准残酷)", data = 60},
+            {description = "90秒 (稍有喘息)", data = 90},
+            {description = "120秒 (缓慢折磨)", data = 120},
+        },
+        default = 60,
+    },
+    {
+        name = "first_disaster_delay",
+        label = labels.first_disaster_delay,
+        hover = "游戏开始后多少秒降临第一次灾难",
+        options = {
+            {description = "5秒 (立刻开打)", data = 5},
+            {description = "10秒 (快速进入状态)", data = 10},
+            {description = "30秒 (给点准备时间)", data = 30},
+            {description = "60秒 (和平开局)", data = 60},
+        },
+        default = 10,
+    },
     {
         name = "event_count",
         label = labels.event_count,
@@ -163,6 +194,32 @@ configuration_options = {
     },
     
     Title(""),
+    Title(labels.clean_settings),
+    {
+        name = "clean_interval",
+        label = labels.clean_interval,
+        hover = labels.clean_interval_hover,
+        options = {
+            {description = "3分钟 (180秒)", data = 180},
+            {description = "5分钟 (300秒)", data = 300},
+            {description = "10分钟 (600秒)", data = 600},
+            {description = "20分钟 (1200秒)", data = 1200},
+        },
+        default = 300,
+    },
+    {
+        name = "clean_notice_advance",
+        label = labels.clean_notice_advance,
+        hover = labels.clean_notice_advance_hover,
+        options = {
+            {description = "30秒", data = 30},
+            {description = "60秒", data = 60},
+            {description = "120秒", data = 120},
+        },
+        default = 60,
+    },
+    
+    Title(""),
     Title(labels.event_types),
     {
         name = "enable_negative",
@@ -182,7 +239,7 @@ configuration_options = {
             {description = labels.enable, data = true},
             {description = labels.disable, data = false},
         },
-        default = false,
+        default = true,
     },
     
     Title(""),

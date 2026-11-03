@@ -1,5 +1,9 @@
 GLOBAL.setmetatable(env, { __index = function(t, k) return GLOBAL.rawget(GLOBAL, k) end })
 
+local DISASTER_INTERVAL = GetModConfigData("disaster_interval") or 60
+local FIRST_DISASTER_DELAY = GetModConfigData("first_disaster_delay") or 10
+local CLEAN_INTERVAL = GetModConfigData("clean_interval") or 300
+local CLEAN_NOTICE_ADVANCE = GetModConfigData("clean_notice_advance") or 60
 local EVENT_COUNT = 3
 local NEWS_STYLE = "formal"
 local NEWS_INTERVAL = 1
@@ -11,6 +15,7 @@ local WARNING_TIME = 60
 local ENABLE_NO_REPEAT = false
 local REPEAT_LIMIT = 5
 local NEWS_LANGUAGE = "zh"
+
 
 local NEWS_HEADERS = {
     beautiful = {
@@ -4492,6 +4497,10 @@ end
 
 AddPrefabPostInit("world", function(inst)
     if not TheWorld.ismastersim then return end
+
+	-- 【核心修复】加一个标记，防止世界重载或多次初始化时重复挂载定时器
+    if inst._disaster_task_started then return end
+    inst._disaster_task_started = tr
     
     GetConfig()
     
@@ -4504,7 +4513,7 @@ AddPrefabPostInit("world", function(inst)
     end)
     
     --代表每 60 秒强制播报一次灾难
-    inst:DoPeriodicTask(60, CheckDailyNews)
-    
-    -- 【删除了这里】把 inst:DoTaskInTime(5, CheckDailyNews) 删掉，避免开局倒计时还没结束就天降灾难
+    inst:DoPeriodicTask(DISASTER_INTERVAL, CheckDailyNews)
+    --开局第一次10秒播报一次灾难
+    inst:DoTaskInTime(FIRST_DISASTER_DELAY, CheckDailyNews)
 end)
